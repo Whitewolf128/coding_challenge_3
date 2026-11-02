@@ -1,6 +1,7 @@
 import * as itemService from "../src/api/v1/services/productService";
 import * as firestoreRepository from "../src/api/v1/repositories/firestoreRepository";
-import { Item } from "../src/api/v1/models/productModel";
+import { Product } from "../src/api/v1/models/productModel";
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 
 // Mock the repository module
 // jest.mock replaces the entire module with an auto-mocked version
@@ -22,12 +23,14 @@ describe("Item Service", () => {
         };
         const mockDocumentId: string = "test-item-id";
 
-        (firestoreRepository.createDocument as jest.Mock).mockResolvedValue(
-            mockDocumentId
-        );
+        (
+            firestoreRepository.createDocument as jest.MockedFunction<
+                typeof firestoreRepository.createDocument
+            >
+        ).mockResolvedValue(mockDocumentId);
 
         // Act
-        const result: Item = await itemService.createItem(mockItemData);
+        const result: Product = await itemService.createProduct(mockItemData);
 
         // Assert
         expect(firestoreRepository.createDocument).toHaveBeenCalledWith(
@@ -46,28 +49,32 @@ describe("Item Service", () => {
     it("should delete an item successfully", async () => {
         // Arrange
         const mockDocumentId: string = "test-item-id";
-        const mockItem: Item = {
+        const mockProduct: Product = {
             id: mockDocumentId,
             name: "Test Item",
-            description: "Test Description",
+            sku: "test-item-sku",
             price: 100,
+            quantity: 1,
+            category: "Test Category",
             createdAt: new Date(),
             updatedAt: new Date(),
         };
 
         // jest.spyOn creates a mock for a specific method/function on an object, in our example the itemService
-        jest.spyOn(itemService, "getItemById").mockResolvedValue(mockItem);
+        jest.spyOn(itemService, "getProductById").mockResolvedValue(mockProduct);
 
         // jest.Mock replaces the auto-mocked version with our specific mocked implementation
-        (firestoreRepository.deleteDocument as jest.Mock).mockResolvedValue(
-            undefined
-        );
+        (
+            firestoreRepository.deleteDocument as jest.MockedFunction<
+                typeof firestoreRepository.deleteDocument
+            >
+        ).mockResolvedValue(undefined);
 
         // Act
-        await itemService.deleteItem(mockDocumentId);
+        await itemService.deleteProduct(mockDocumentId);
 
         // Assert
-        expect(itemService.getItemById).toHaveBeenCalledWith(mockDocumentId);
+        expect(itemService.getProductById).toHaveBeenCalledWith(mockDocumentId);
         expect(firestoreRepository.deleteDocument).toHaveBeenCalledWith(
             "items",
             mockDocumentId

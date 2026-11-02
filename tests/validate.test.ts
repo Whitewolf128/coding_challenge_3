@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { validateRequest } from "../src/api/v1/middleware/validate";
-import { itemSchemas } from "../src/api/v1/validations/productValidation";
+import { productSchemas } from "../src/api/v1/validations/productValidation";
 import { MiddlewareFunction } from "../src/api/v1/types/express";
 import { HTTP_STATUS } from "../src/constants/httpConstants";
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 
 describe("Validation Middleware", () => {
     let mockReq: Partial<Request>;
@@ -16,8 +17,8 @@ describe("Validation Middleware", () => {
             query: {},
         };
         mockRes = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
+            status: jest.fn<Response["status"]>().mockReturnThis(),
+            json: jest.fn<Response["json"]>(),
         };
         mockNext = jest.fn();
     });
@@ -29,7 +30,7 @@ describe("Validation Middleware", () => {
             description: "Valid description",
         };
         const middleware: MiddlewareFunction = validateRequest(
-            itemSchemas.create
+            productSchemas.create
         );
 
         // Act
@@ -47,7 +48,7 @@ describe("Validation Middleware", () => {
             description: "Valid description",
         };
         const middleware: MiddlewareFunction = validateRequest(
-            itemSchemas.create
+            productSchemas.create
         );
 
         // Act
