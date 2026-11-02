@@ -7,6 +7,10 @@ const productRouter: Router = express.Router();
 
 // "/api/v1/items" prefixes all below routes
 productRouter.get("/", productController.getAllProducts);
+productRouter.get(
+    "/:id",
+    productController.getProductByIdController
+);
 productRouter.post(
     "/",
     validateRequest(productSchemas.create),

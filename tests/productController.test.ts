@@ -8,7 +8,7 @@ import { beforeEach ,afterEach, describe, expect, it, jest } from "@jest/globals
 
 jest.mock("../src/api/v1/services/productService");
 
-describe("Item Controller", () => {
+describe("Product Controller", () => {
     let mockReq: Partial<Request>;
     let mockRes: Partial<Response>;
     let mockNext: NextFunction;
@@ -30,7 +30,7 @@ describe("Item Controller", () => {
                 {
                     id: "1",
                     name: "Test Item",
-                    sku: "TEST-001",
+                    sku: "TES0001",
                     quantity: 10,
                     price: 9.99,
                     category: "Test",
@@ -48,7 +48,7 @@ describe("Item Controller", () => {
 
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
-                message: "Items successfully retireved",
+                message: "Products successfully retrieved",
                 status: "success",
                 data: mockProducts,
             });
@@ -58,8 +58,8 @@ describe("Item Controller", () => {
     describe("createProduct", () => {
         it("should handle successful creation", async () => {
             const mockBody = {
-                name: "Test Item",
-                sku: "TEST-001",
+                name: "Test Product",
+                sku: "TES0001",
                 quantity: 10,
                 price: 9.99,
                 category: "Test",
@@ -81,9 +81,10 @@ describe("Item Controller", () => {
                 mockNext
             );
 
+            expect(productService.createProduct).toHaveBeenCalledWith(mockBody);
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.CREATED);
             expect(mockRes.json).toHaveBeenCalledWith({
-                message: "Item created successfully",
+                message: "Product created successfully",
                 data: mockProduct,
                 status: "success",
             });

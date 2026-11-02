@@ -23,11 +23,14 @@ describe("Validation Middleware", () => {
         mockNext = jest.fn();
     });
 
-    it("should pass validation for valid item data", () => {
+    it("should pass validation for valid product data", () => {
         // Arrange
         mockReq.body = {
-            name: "Valid Item",
-            description: "Valid description",
+            name: "Valid Product",
+            sku: "VAL0001",
+            quantity: 3,
+            price: 19.99,
+            category: "electronics",
         };
         const middleware: MiddlewareFunction = validateRequest(
             productSchemas.create
@@ -45,7 +48,10 @@ describe("Validation Middleware", () => {
         // Arrange
         mockReq.body = {
             name: "",
-            description: "Valid description",
+            sku: "VAL0001",
+            quantity: 3,
+            price: 19.99,
+            category: "electronics",
         };
         const middleware: MiddlewareFunction = validateRequest(
             productSchemas.create

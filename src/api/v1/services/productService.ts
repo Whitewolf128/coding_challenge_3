@@ -2,6 +2,7 @@ import {
     QuerySnapshot,
     DocumentData,
     DocumentSnapshot,
+    Timestamp,
 } from "firebase-admin/firestore";
 import { Product } from "../models/productModel";
 import {
@@ -15,6 +16,27 @@ import {
 // reference to the firestore collection name
 const COLLECTION: string = "products";
 
+const toDate = (value: unknown, fieldName: string, productId: string): Date => {
+    if (value instanceof Timestamp) {
+        return value.toDate();
+    }
+
+    const date =
+        value instanceof Date
+            ? new Date(value.getTime())
+            : typeof value === "string" || typeof value === "number"
+              ? new Date(value)
+              : null;
+
+    if (!date || Number.isNaN(date.getTime())) {
+        throw new Error(
+            `Product ${productId} has an invalid ${fieldName}; expected a Firestore timestamp or valid date value`
+        );
+    }
+
+    return date;
+};
+
 /**
  * Retrieves all products from storage
  * @returns Array of all products
@@ -27,8 +49,8 @@ export const getAllProducts = async (): Promise<Product[]> => {
             return {
                 id: doc.id,
                 ...data,
-                createdAt: data.createdAt.toDate(),
-                updatedAt: data.updatedAt.toDate(),
+                createdAt: toDate(data.createdAt, "createdAt", doc.id),
+                updatedAt: toDate(data.updatedAt, "updatedAt", doc.id),
             } as Product;
         });
 
@@ -40,14 +62,12 @@ export const getAllProducts = async (): Promise<Product[]> => {
 
 /**
  * Creates a new product
- * @param productData - The data for the new product (name and description)
+ * @param productData - The required fields for the new product
  * @returns The created product with generated ID
  */
-export const createProduct = async (productData: {
-    name: string;
-    description: string;
-    price?: number;
-}): Promise<Product> => {
+export const createProduct = async (
+    productData: Pick<Product, "name" | "sku" | "quantity" | "price" | "category">
+): Promise<Product> => {
     const dateNow = new Date();
     const newProduct: Partial<Product> = {
         ...productData,
@@ -73,9 +93,15 @@ export const getProductById = async (id: string): Promise<Product> => {
     }
 
     const data: DocumentData | undefined = doc.data();
+    if (!data) {
+        throw new Error(`Product with ID ${id} has no document data`);
+    }
+
     const product: Product = {
         id: doc.id,
         ...data,
+        createdAt: toDate(data.createdAt, "createdAt", doc.id),
+        updatedAt: toDate(data.updatedAt, "updatedAt", doc.id),
     } as Product;
 
     return structuredClone(product);
@@ -90,7 +116,9 @@ export const getProductById = async (id: string): Promise<Product> => {
  */
 export const updateProduct = async (
     id: string,
-    productData: Pick<Product, "name" | "category" | "price">
+    productData: Partial<
+        Pick<Product, "name" | "sku" | "quantity" | "price" | "category">
+    >
 ): Promise<Product> => {
     // check if the product exists before updating
     const product: Product = await getProductById(id);
@@ -103,8 +131,10 @@ export const updateProduct = async (
         updatedAt: new Date(),
     };
 
-    // I went for the simple option to only update defined values, you could also use an Object method like Object.entries() to be less verbose
     if (productData.name !== undefined) updateProduct.name = productData.name;
+    if (productData.sku !== undefined) updateProduct.sku = productData.sku;
+    if (productData.quantity !== undefined)
+        updateProduct.quantity = productData.quantity;
     if (productData.category !== undefined)
         updateProduct.category = productData.category;
     if (productData.price !== undefined) updateProduct.price = productData.price;
@@ -127,4 +157,15 @@ export const deleteProduct = async (id: string): Promise<void> => {
     }
 
     await deleteDocument(COLLECTION, id);
+};
+
+export const getProductsById = async (id: string): Promise<Product[]> => {
+    const product = (await getAllProducts()).find((p) => p.id === id);
+  if (!product) {
+    return [];
+  }
+
+  return [{
+    ...product
+  }];
 };

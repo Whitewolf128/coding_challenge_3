@@ -6,13 +6,14 @@ import { beforeEach ,afterEach, describe, expect, it, jest } from "@jest/globals
 import type { Request, Response } from "express";
 
 jest.mock("../src/api/v1/controllers/productController", () => ({
-    getAllItems: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.OK).send()),
-    createItem: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.CREATED).send()),
-    updateItem: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.OK).send()),
-    deleteItem: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.OK).send()),
+    getAllProducts: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.OK).send()),
+    getProductByIdController: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.OK).send()),
+    createProduct: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.CREATED).send()),
+    updateProduct: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.OK).send()),
+    deleteProduct: jest.fn((_req: Request, res: Response) => res.status(HTTP_STATUS.OK).send()),
 }));
 
-describe("Item Routes", () => {
+describe("Product Routes", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -26,12 +27,15 @@ describe("Item Routes", () => {
 
     describe("POST /api/v1/products/", () => {
         it("should call createProduct controller with valid data", async () => {
-            const mockItem = {
+            const mockProduct = {
                 name: "Test Product",
-                description: "Test description",
+                sku: "TES0001",
+                quantity: 3,
+                price: 19.99,
+                category: "electronics",
             }; 
 
-            await request(app).post("/api/v1/products/").send(mockItem);
+            await request(app).post("/api/v1/products/").send(mockProduct);
             expect(productController.createProduct).toHaveBeenCalled();
         });
     });
@@ -40,11 +44,23 @@ describe("Item Routes", () => {
         it("should call updateProduct controller with valid data", async () => {
             const mockProduct = {
                 name: "Updated Product",
-                description: "Updated description",
+                sku: "UPD0001",
+                quantity: 4,
+                price: 24.99,
+                category: "electronics",
             }; 
 
             await request(app).put("/api/v1/products/testId").send(mockProduct);
             expect(productController.updateProduct).toHaveBeenCalled();
+        });
+
+        it("should reject an empty update", async () => {
+            const response = await request(app)
+                .put("/api/v1/products/testId")
+                .send({});
+
+            expect(response.status).toBe(400);
+            expect(productController.updateProduct).not.toHaveBeenCalled();
         });
     });
 

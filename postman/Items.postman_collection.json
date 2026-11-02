@@ -7,12 +7,12 @@
 	},
 	"item": [
 		{
-			"name": "getAllItems",
+			"name": "getAllProducts",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/v1/items/",
+					"raw": "http://localhost:3000/api/v1/products/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -21,7 +21,7 @@
 					"path": [
 						"api",
 						"v1",
-						"items",
+						"products",
 						""
 					]
 				}
@@ -29,13 +29,13 @@
 			"response": []
 		},
 		{
-			"name": "createItem",
+			"name": "createProduct",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"\",\r\n    \"description\": \"Just a gizmo\"\r\n}",
+					"raw": "{\r\n    \"name\": \"Gizmo\",\r\n    \"sku\": \"GIZ0001\",\r\n    \"quantity\": 1,\r\n    \"price\": 19.99,\r\n    \"category\": \"other\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,7 +43,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/v1/items/",
+					"raw": "http://localhost:3000/api/v1/products/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -52,21 +52,33 @@
 					"path": [
 						"api",
 						"v1",
-						"items",
+						"products",
 						""
 					]
 				}
 			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"pm.collectionVariables.set('productId', response.data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"response": []
 		},
 		{
-			"name": "updateItem",
+			"name": "updateProduct",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Gizmodo\",\r\n    \"description\": \"just a gizmodo\"\r\n}",
+					"raw": "{\r\n    \"name\": \"Gizmodo\",\r\n    \"sku\": \"GIZ0002\",\r\n    \"quantity\": 2,\r\n    \"price\": 24.99,\r\n    \"category\": \"other\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -74,7 +86,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/v1/items/:id",
+					"raw": "http://localhost:3000/api/v1/products/{{productId}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -83,26 +95,20 @@
 					"path": [
 						"api",
 						"v1",
-						"items",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "1757599673410"
-						}
+						"products",
+						"{{productId}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "deleteItem",
+			"name": "deleteProduct",
 			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/v1/items/:id",
+					"raw": "http://localhost:3000/api/v1/products/{{productId}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -111,18 +117,18 @@
 					"path": [
 						"api",
 						"v1",
-						"items",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "1757599673410"
-						}
+						"products",
+						"{{productId}}"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "productId",
+			"value": ""
 		}
 	]
 }

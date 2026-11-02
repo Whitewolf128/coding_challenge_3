@@ -25,6 +25,29 @@ export const getAllProducts = async (
     }
 };
 
+export const getProductByIdController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const products = await ProductService.getProductsById(id);
+        if (products.length === 0) {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: "Product not found"
+            });
+            return;
+        }
+        res.status(HTTP_STATUS.OK).json({
+            message: "Product retrieved",
+            data: products[0]
+        });
+    } catch (error: unknown) {
+        next(error);
+    }
+};
+
 /**
  * Manages requests, reponses, and validation to create an Product
  * @param req - The express Request
@@ -37,15 +60,14 @@ export const createProduct = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        // Extract only the fields we want (destructuring)
-        // const name: string = req.body.name;
-        // const description: string = req.body.description;
-        const { name, description, price } = req.body;
+        const { name, sku, quantity, price, category } = req.body;
 
         const newProduct: Product = await ProductService.createProduct({
             name,
-            description,
+            sku,
+            quantity,
             price,
+            category,
         });
         res.status(HTTP_STATUS.CREATED).json(
             successResponse(newProduct, "Product created successfully")
@@ -71,13 +93,15 @@ export const updateProduct = async (
         const { id } = req.params;
 
         // Extract update fields
-        const { name, category, price } = req.body;
+        const { name, sku, quantity, category, price } = req.body;
 
         // create the update Product object with the fields to be updated
         const updatedProduct: Product = await ProductService.updateProduct(id, {
             name,
-            category,
+            sku,
+            quantity,
             price,
+            category
         });
 
         res.status(HTTP_STATUS.OK).json(
