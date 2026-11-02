@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { validateRequest } from "../src/api/v1/middleware/validate";
-import { itemSchemas } from "../src/api/v1/validations/itemValidation";
+import { itemSchemas } from "../src/api/v1/validations/productValidation";
 import { MiddlewareFunction } from "../src/api/v1/types/express";
 import { HTTP_STATUS } from "../src/constants/httpConstants";
 

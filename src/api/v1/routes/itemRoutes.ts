@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import { validateRequest } from "../middleware/validate";
-import { itemSchemas } from "../validations/itemValidation";
+import { itemSchemas } from "../validations/productValidation";
 import * as itemController from "../controllers/itemController";
 
 const router: Router = express.Router();

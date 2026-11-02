@@ -1,24 +1,24 @@
 import { Request, Response, NextFunction } from "express";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
-import * as itemService from "../services/itemService";
-import { Item } from "../models/itemModel";
+import * as ProductService from "../services/productService";
+import { Product } from "../models/productModel";
 import { successResponse } from "../models/responseModel";
 
 /**
- * Manages requests and reponses to retrieve all Items
+ * Manages requests and reponses to retrieve all Products
  * @param req - The express Request
  * @param res  - The express Response
  * @param next - The express middleware chaining function
  */
-export const getAllItems = async (
+export const getAllProducts = async (
     req: Request,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
     try {
-        const items: Item[] = await itemService.getAllItems();
+        const products: Product[] = await ProductService.getAllProducts();
         res.status(HTTP_STATUS.OK).json(
-            successResponse(items, "Items successfully retireved")
+            successResponse(products, "Products successfully retrieved")
         );
     } catch (error: unknown) {
         next(error);
@@ -26,12 +26,12 @@ export const getAllItems = async (
 };
 
 /**
- * Manages requests, reponses, and validation to create an Item
+ * Manages requests, reponses, and validation to create an Product
  * @param req - The express Request
  * @param res  - The express Response
  * @param next - The express middleware chaining function
  */
-export const createItem = async (
+export const createProduct = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -42,13 +42,13 @@ export const createItem = async (
         // const description: string = req.body.description;
         const { name, description, price } = req.body;
 
-        const newItem: Item = await itemService.createItem({
+        const newProduct: Product = await ProductService.createProduct({
             name,
             description,
             price,
         });
         res.status(HTTP_STATUS.CREATED).json(
-            successResponse(newItem, "Item created successfully")
+            successResponse(newProduct, "Product created successfully")
         );
     } catch (error: unknown) {
         next(error);
@@ -56,12 +56,12 @@ export const createItem = async (
 };
 
 /**
- * Manages requests and reponses to update an Item
+ * Manages requests and reponses to update an Product
  * @param req - The express Request
  * @param res  - The express Response
  * @param next - The express middleware chaining function
  */
-export const updateItem = async (
+export const updateProduct = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -71,17 +71,17 @@ export const updateItem = async (
         const { id } = req.params;
 
         // Extract update fields
-        const { name, description, price } = req.body;
+        const { name, category, price } = req.body;
 
-        // create the update item object with the fields to be updated
-        const updatedItem: Item = await itemService.updateItem(id, {
+        // create the update Product object with the fields to be updated
+        const updatedProduct: Product = await ProductService.updateProduct(id, {
             name,
-            description,
+            category,
             price,
         });
 
         res.status(HTTP_STATUS.OK).json(
-            successResponse(updatedItem, "Item updated successfully")
+            successResponse(updatedProduct, "Product updated successfully")
         );
     } catch (error: unknown) {
         next(error);
@@ -89,12 +89,12 @@ export const updateItem = async (
 };
 
 /**
- * Manages requests and reponses to delete an Item
+ * Manages requests and reponses to delete an Product
  * @param req - The express Request
  * @param res  - The express Response
  * @param next - The express middleware chaining function
  */
-export const deleteItem = async (
+export const deleteProduct = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -102,9 +102,9 @@ export const deleteItem = async (
     try {
         const id: string = req.params.id;
 
-        await itemService.deleteItem(id);
+        await ProductService.deleteProduct(id);
         res.status(HTTP_STATUS.OK).json(
-            successResponse("Item successfully deleted")
+            successResponse("Product successfully deleted")
         );
     } catch (error: unknown) {
         next(error);

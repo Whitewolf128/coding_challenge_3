@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { HTTP_STATUS } from "../src/constants/httpConstants";
 import * as itemController from "../src/api/v1/controllers/itemController";
-import * as itemService from "../src/api/v1/services/itemService";
-import { Item } from "../src/api/v1/models/itemModel";
+import * as itemService from "../src/api/v1/services/productService";
+import { Item } from "../src/api/v1/models/productModel";
 import { mock } from "node:test";
 
-jest.mock("../src/api/v1/services/itemService");
+jest.mock("../src/api/v1/services/productService");
 
 describe("Item Controller", () => {
     let mockReq: Partial<Request>;

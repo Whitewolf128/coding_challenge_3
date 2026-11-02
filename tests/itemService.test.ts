@@ -1,6 +1,6 @@
-import * as itemService from "../src/api/v1/services/itemService";
+import * as itemService from "../src/api/v1/services/productService";
 import * as firestoreRepository from "../src/api/v1/repositories/firestoreRepository";
-import { Item } from "../src/api/v1/models/itemModel";
+import { Item } from "../src/api/v1/models/productModel";
 
 // Mock the repository module
 // jest.mock replaces the entire module with an auto-mocked version
