@@ -7,20 +7,9 @@ const productRouter: Router = express.Router();
 
 // "/api/v1/items" prefixes all below routes
 productRouter.get("/", productController.getAllProducts);
-productRouter.get(
-    "/:id",
-    productController.getProductByIdController
-);
-productRouter.post(
-    "/",
-    validateRequest(productSchemas.create),
-    productController.createProduct
-);
-productRouter.put(
-    "/:id",
-    validateRequest(productSchemas.update),
-    productController.updateProduct
-);
+productRouter.get("/:id", productController.getProductByIdController);
+productRouter.post("/", validateRequest(productSchemas.create),productController.createProduct);
+productRouter.put("/:id", validateRequest(productSchemas.update), productController.updateProduct);
 productRouter.delete("/:id", productController.deleteProduct);
 
 export default productRouter;
