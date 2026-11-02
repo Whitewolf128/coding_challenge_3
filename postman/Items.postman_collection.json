@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "5ec198ea-3ef6-41c3-901c-80ccfb784fe8",
+		"name": "Items",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29575153"
+	},
+	"item": [
+		{
+			"name": "getAllItems",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/items/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"items",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createItem",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"\",\r\n    \"description\": \"Just a gizmo\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/items/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"items",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateItem",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Gizmodo\",\r\n    \"description\": \"just a gizmodo\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/items/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"items",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1757599673410"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteItem",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/items/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"items",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1757599673410"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
